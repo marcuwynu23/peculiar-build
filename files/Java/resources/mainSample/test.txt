@@ -1,0 +1,14 @@
+package com.gui;  
+
+/* 
+
+Example:
+import javax.swing.SwingUtilities;
+
+public class Main{
+	public static void main(String[] args){
+		SwingUtilities.invokeLater(() ->{
+			new com.controller.Controller(new com.view.View(), new com.model.Model());
+		});	
+	}
+} */

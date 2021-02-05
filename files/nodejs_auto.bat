@@ -1,0 +1,153 @@
+@echo off
+
+set EDIR=%1
+set MDIR=%2
+set EDITOR=%3
+::set Color
+set COLOR=%4
+set COLOR_ERROR=4
+
+set WDIR=%MDIR%\NodeJSProjects
+set APPLICATION_TITLE=NodeJS Project Builder
+title %APPLICATION_TITLE%
+mkdir %WDIR% 
+:main
+	cd %WDIR%
+	color %COLOR%
+	cls
+	echo nodejs project automation:
+	echo commands:
+	echo.                              
+	echo ff     find files/folders   
+	echo ctp    create python project       
+	echo ctj    create python file         
+	echo xr     explore project      
+	echo tweb   test website project
+	echo runp   run project      
+	echo delp   delete project       
+	echo delf   delete file          
+	echo lsp    list projects        
+	echo e      open editor          
+	echo cmd    open command prompt  
+	echo.
+	set choice=nul
+	set /P choice=# enter command: 
+	if %choice% == ff   goto findFile
+	if %choice% == ctp  goto createProject
+	if %choice% == runp goto runProject
+	if %choice% == lsp  goto listProject
+	if %choice% == xr   goto exploreProject
+	if %choice% == delp goto delProject
+	if %choice% == delf goto delFile
+	if %choice% == e 	goto openEditor
+	if %choice% == cmd 	goto openCmd
+	if %choice% == tweb goto testWebsite
+goto main
+
+:findFile
+	cls
+	color A
+	echo.
+	set /p object=# folder/file-name: 
+	echo Result found for '%object%':
+	dir /B /S *%object%*
+	echo.
+goto askToReturnToMenu
+
+:createProject
+	cls
+	set app_name=nul
+	set /p proj_name=# project-name:
+	set app_source=%proj_name%\src\app
+	set view_source=%proj_name%\src\view
+	set model_source=%proj_name%\src\model
+	set controller_source=%proj_name%\src\controller
+	set database_source=%proj_name%\src\database
+	set resources=%proj_name%\resources\templates
+	set test_source=%proj_name%\test
+	set data_source=%proj_name%\data
+
+	rmdir /Q /S %proj_name% 
+	mkdir %proj_name%
+	mkdir %app_source% %view_source% %model_source% %controller_source%
+	mkdir %database_source% %data_source% %test_source% %resources%
+	echo. > %proj_name%\README.md && echo. > %proj_name%\LICENSE
+	echo. > %proj_name%\index.js && echo. > %proj_name%\package.json
+
+	::generating source templates
+	echo. > %app_source%\app.js
+	echo. > %controller_source%\controller.js
+	echo. > %view_source%\view.js
+	echo. > %model_source%\model.js
+	echo. > %database_source%\database.js
+	tree /F %proj_name%
+	%EDITOR% %proj_name%\app.js
+	:runAsk
+		set run=nul
+		set /P run=# run?[y/n]: 
+			if %run% == y goto runpy
+			if %run% == n goto askToReturnToMenu
+	goto runAsk
+	:runpy
+		echo start new process...
+		start cmd /K node %proj_name%\app.js
+	goto runAsk
+
+:askToReturnToMenu
+	set askToMenu=nul
+	set /P askToMenu=# back to Menu?[y]: 
+		if %askToMenu% == y goto main else (
+			goto askToReturnToMenu )
+
+:runProject
+	echo NodeJS Project List:
+	echo. && dir /AD /B /ON /-C && echo.
+	set /p proj_name=# project-name: 
+	cd %proj_name%
+goto runAsk
+
+:exploreProject
+	cd %WDIR%
+	set /p proj_name=# project-name: 
+	cd %proj_name% && explorer %proj_name%
+
+:listProject
+	echo NodeJS Project List:
+	echo. && dir /AD /B /ON /-C && echo.
+goto askToReturnToMenu
+
+:delProject
+	echo NodeJS Project List:
+	echo. && dir /AD /B /ON /-C && echo.
+	set /p proj_name=# project-name: 
+	rmdir /S /Q %proj_name%
+goto askToReturnToMenu
+
+:delFile
+	set /p object=# file-name: 
+	echo Result found for '%object%':
+	dir /B /S *%object%*
+:asktoD
+	set asktoDel=nul
+	set /P asktoDel=# delete this file?[y/n]: 
+		if %asktoDel% == y goto delF
+		if %asktoDel% == n goto askToReturnToMenu
+goto asktoD
+
+:openEditor
+	%EDITOR% 
+goto main
+
+:openCmd
+	start /I cmd .
+goto main
+
+:testWebsite
+	set protocol=nul
+	set ip=nul
+	set port=nul
+	set /P protocol=# protocol: 
+	set /P ip=# ip: 
+	set /P port=# port: 
+	explorer %protocol%://%ip%:%port%
+goto main

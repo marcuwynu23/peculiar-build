@@ -1,0 +1,2 @@
+Main-Class: com.builder.PeculiarBuilder 
+Class-Path: lib/sqlite.jar   
