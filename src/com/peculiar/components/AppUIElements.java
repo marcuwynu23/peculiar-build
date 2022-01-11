@@ -10,4 +10,5 @@ public interface AppUIElements {
     void setUI(Font font,Color bColor,Color fcolor);
     void setUI(Border border,Color bColor,Color fcolor);
     void setUI(Color bColor,Color fcolor);
+    
 }

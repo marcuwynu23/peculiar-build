@@ -32,5 +32,6 @@ public class AppTextField extends JTextField implements AppUIElements {
         setBackground(bColor);
         setForeground(fcolor);
     }
+      
     
 }
